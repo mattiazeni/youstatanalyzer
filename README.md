@@ -1,7 +1,7 @@
 YOUStatAnalyzer
 ===============
 
-YOUStatAnalyzer is a tool written in Python able to capture the popularity metrics of YouTube's videos. Since in June 2013 YouTube removed the API that allowed to retrieve the statistics available below each video, we needed to find a new way of obtain those kind of data. Il risultato di questo studio e' YOUStatAnalyzer, un software che permette in maniera molto rapida di ottenere tutte le statistiche dei video YouTube con lo scopo finale di generare un dataset su cui effettuare analisi. Per scaricare queste statistiche il tool ottiene un token di sessione che poi verra' utilizzato per effettuare la richiesta dei dati, che verranno poi interpretati e salvati in un database in un formato noto.
+YOUStatAnalyzer is a tool written in Python able to capture the popularity metrics of YouTube's videos. Since in June 2013 YouTube removed the API that allowed to retrieve the statistics available below each video, we needed to find a new way of obtain those kind of data. The result is this piece of software that allows to automatically and in a fast way to download YouTube's videos statistics with the final purpose of creating a dataset for analysis porposes. In order to extract these data from YouTube, the tool obtains a session token that is later used for making the request to YouTube's servers. Once the data have been downloaded thay are parsed in order to save them in a known format inside a MongoDB Server.
 
 ## Dependencies and Libraries
 
