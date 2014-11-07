@@ -26,7 +26,20 @@ To run it use the command: ```python youtube_script.py config.xml``` where confi
 
 ## The Database
 
-As database system we used MongoDB through the pymongo library. If you are not confortable with it you can just replace the only functions that interacts with the database: ```insertEntry()``` in functions.py
+As database system we used MongoDB through the pymongo library. If you are not confortable with it you can just replace the only functions that interacts with the database: ```insertEntry()``` in functions.py:
+
+```
+def insertEntry(video):
+	try:
+		client = MongoClient(getServerIp(), getServerPort())
+		db = client[getServerDB()][getServerCollection()]
+		db.insert(video)
+	except pymongo.errors.DuplicateKeyError:
+		print 'Insert Error: Duplicate'
+		pass
+```
+
+This function takes as argument the dictionary containing all the information about the video that needs to be inserted into the database. In particular, this function creates an Instance of MongoClient with the IP and Port of the Server. Then Creates an instance of the database with Database Name and Collection Name and in the end inserts the dictionary. We surrounded it with ```try...catch``` to avoid duplicates: if a duplicated _id occurs, the script throws a ```DuplicateKeyError``` exception.
 
 ### The Data Structure
 
