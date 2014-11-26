@@ -41,5 +41,7 @@ def insertEntry(video):
 
 This function takes as argument the dictionary containing all the information about the video that needs to be inserted into the database. In particular, this function creates an Instance of MongoClient with the IP and Port of the Server. Then Creates an instance of the database with Database Name and Collection Name and in the end inserts the dictionary. We surrounded it with ```try...catch``` to avoid duplicates: if a duplicated _id occurs, the script throws a ```DuplicateKeyError``` exception.
 
+Tha database contains 1006469 videos for 31488523593bytes.
+
 ### The Data Structure
 
