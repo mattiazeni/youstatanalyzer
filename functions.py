@@ -19,6 +19,7 @@
 #######################################################################
 
 import urllib2
+import urllib
 import cookielib
 from xml.dom.minidom import parse, parseString
 import re
@@ -27,6 +28,8 @@ from pymongo import MongoClient
 import random
 import linecache
 import json
+import os
+import os.path
 
 HOST = 'www.youtube.com'
 GDATA_HOST = 'gdata.youtube.com'
@@ -205,7 +208,6 @@ def extractVideoStatistics (videoID, data):
 			singleVideo[level1]["data"] = objectListData[ii]
 			ii += 1
 
-	print(json.dumps(singleVideo))
 	insertEntry(singleVideo)
 
 	return
@@ -386,3 +388,39 @@ def extractGplusStatistics (videoID):
 				
 				gplusentry.append(gplusdata)
 	return gplusentry
+
+#***************************************************************************************#
+# Function: downloadWordDataset
+# Parameters: none
+# How it works: it downloads the dataset if it doesn't exist
+# Return: downloads the word database file if doesn't exist
+#***************************************************************************************#
+def downloadWordsDataset ():
+
+	file_name = "index.noun"
+
+	if os.path.isfile(file_name) and os.access(file_name, os.R_OK):
+	    print "Words' dataset file exists and is readable"
+	else:
+		print "Words' dataset file does not exist"
+		url = "http://trac.csail.mit.edu/jwi/export/97/edu.princeton.wordnet/dict/2.1.10000/index.noun"
+
+		u = urllib2.urlopen(url)
+		f = open(file_name, 'wb')
+		meta = u.info()
+		file_size = int(meta.getheaders("Content-Length")[0])
+		print "Downloading: %s Bytes: %s" % (file_name, file_size)
+
+		file_size_dl = 0
+		block_sz = 8192
+		while True:
+			buffer = u.read(block_sz)
+			if not buffer:
+				break
+
+			file_size_dl += len(buffer)
+			f.write(buffer)
+			status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+			status = status + chr(8)*(len(status)+1)
+			print status,
+		f.close()
