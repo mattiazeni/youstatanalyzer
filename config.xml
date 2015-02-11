@@ -1,0 +1,49 @@
+<!--
+#######################################################################
+# File:        config.xml
+# Description: YOUStatAnalyzer script.
+# Author:      Mattia Zeni
+# Created:     Wed Feb 11 16:08:015 CET 2015
+# E-mail:      mattia.zeni@disi.unitn.it
+# University of Trento - Department of Information Engineering and Computer Science
+#
+# (C) Copyright 2015, Mattia Zeni
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################################################
+-->
+
+<config>
+	<dbconfiguration ip="elog.disi.unitn.it" port="27017" database="videos" collection="youstatanalyzer"/>
+    <keywordsearch status="false">
+		<keyword orderby="" results="499" duration="" hd="" safeSearch="" time="all_time" category="Politic">
+			<search_term_and value="berlusconi"/>
+            <category_term_and value="Politic"/>
+		</keyword>
+	</keywordsearch>
+    
+	<singlevideosearch status="false">
+		<video id="tcabIJEfvP4"/>
+		<video id="_mH0VEfoZ4g"/>
+		<video id="9bZkp7q19f0"/>
+	</singlevideosearch>
+    
+	<standardsearch status="false">
+		<!--<feed id="top_rated" time="this_month" region="US" category="Music"/>-->
+		<!--<feed id="top_rated" time="all_time" region="" category="Music"/>-->
+		<feed id="top_rated" results="104" time="all_time" region="US" category="Music"/>
+		<!--<feed id="top_rated" results="50" time="all_time" region="US" category="Autos"/>-->
+		<!--<feed id="top_rated" results="50" time="all_time" region="US" category="Travel"/>-->
+	</standardsearch>
+    
+    <randomsearch status="true">
+        <wordlist filename="index.noun" numberOfKeywords="2000" resultsPerKeyword="100" orderby="" duration="short" hd="" safeSearch="moderate" time="all_time" category=""/>
+	</randomsearch>
+</config>
