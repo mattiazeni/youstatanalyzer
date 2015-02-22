@@ -184,6 +184,7 @@ def extractVideoStatistics (videoID, data):
 	objectListLabels = re.findall(r'["]+[views]+[\\":]+|["]+[shares]+[\\":]+|["]+[subscribers]+[\\":]+|["]+[day]+[\\":]+|["]+[cumulative]+[\\":]+|["]+[daily]+[\\":]+|["]+[watch\-time]+[\\":]+', data)
     
    	video = {}
+
 	singleVideo = extractVideoData(videoID)
 
 	gplusdata = extractGplusStatistics(videoID)
@@ -233,6 +234,7 @@ def insertEntry(video):
 # Return: it returns a dict conteining these information
 #***************************************************************************************#
 def extractVideoData(videoID):
+
 	singleVideo = {}
 	singleVideo["_id"] = videoID
 	singleVideo["accessControl"] = {}
@@ -257,8 +259,9 @@ def extractVideoData(videoID):
 			singleVideo["type"] = mediaInfo.getAttribute("type")
 			singleVideo["duration"] = mediaInfo.getAttribute("duration")
 		for mediaCategory in mediaGroup.getElementsByTagName("media:category"):
-			for category_sub in mediaCategory.childNodes:
-				singleVideo["category"] = category_sub.data
+			if mediaCategory.hasAttribute("label"):
+				for category_sub in mediaCategory.childNodes:
+					singleVideo["category"] = category_sub.nodeValue
 		for mediaDescription in mediaGroup.getElementsByTagName("media:description"):
 			for description_sub in mediaDescription.childNodes:
 				singleVideo["description"] = description_sub.data
@@ -268,7 +271,6 @@ def extractVideoData(videoID):
 	for accessControl in videoParser.getElementsByTagName("yt:accessControl"):
 		singleVideo["accessControl"][accessControl.getAttribute("action")] = {}
 		singleVideo["accessControl"][accessControl.getAttribute("action")]["permission"] = accessControl.getAttribute("permission")
-
 	sRelated = urllib2.urlopen(yt_related_video_url(videoID))				
 	relatedVideoParser = parseString(sRelated.read())
 	for relatedMediaGroup in relatedVideoParser.getElementsByTagName("media:group"):
@@ -305,7 +307,7 @@ def launchScraper (videoID):
 		data = fetch_video_insights(opener, videoID, token)
 
 		if '"data":' in data:
-			extractVideoStatistics(videoID,data)
+			extractVideoStatistics(videoID, data)
 			return 1
 		else:
 			print "No statistics available for this video"
@@ -351,7 +353,6 @@ def extractGplusStatistics (videoID):
 	parsedHtmlContent = BeautifulSoup(content.read())
 	scripts=parsedHtmlContent.findAll('script')
 
-	gplusdata={}
 	gplusentry=[]
 
 	for script in scripts:
@@ -359,6 +360,7 @@ def extractGplusStatistics (videoID):
 			for single in re.findall(r'\["(?P<name>[^"]*)","(?P<number1>[^"]*)","(?P<data>[^"]*)",(?P<number2>\d*),"(?P<website>[^"]*)","(?P<language>[^"]*)"\]', str(script.contents)):
 				if 'youtube' in single[4]:
 
+					gplusdata={}
 					gplusdata['authorName']=single[0]
 					gplusdata['authorID']=single[1]
 					gplusdata['activityID']=single[2]
@@ -367,6 +369,7 @@ def extractGplusStatistics (videoID):
 					gplusdata['activityLanguage']=single[5]
 					
 				else:
+					gplusdata={}
 					gplusdata['authorName']=single[0]
 					gplusdata['authorID']=single[1]
 					gplusdata['activityID']=single[2]
@@ -374,11 +377,12 @@ def extractGplusStatistics (videoID):
 					gplusdata['activityReshared']=single[4]
 					gplusdata['activityType']='reshare'
 					gplusdata['activityLanguage']=single[5]
-					
+				
 				gplusentry.append(gplusdata)
 
 			for single in re.findall(r'\["(?P<name>[^"]*)","(?P<number1>[^"]*)","(?P<data>[^"]*)",(?P<number2>\d*),,"(?P<language>[^"]*)"\]', str(script.contents)):
-
+				
+				gplusdata={}
 				gplusdata['authorName']=single[0]
 				gplusdata['authorID']=single[1]
 				gplusdata['activityID']=single[2]
